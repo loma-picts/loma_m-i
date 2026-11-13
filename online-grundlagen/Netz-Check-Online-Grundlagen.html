@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
     .touch-btn {
-      min-height: 52px;
+      min-height: 50px;
       cursor: pointer;
       transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease;
       user-select: none;
@@ -22,7 +22,7 @@
     }
     @keyframes fadeSlide {
       0% { opacity: 0; transform: translateY(6px); }
-      100% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; opacity: 1; transform: translateY(0); }
     }
     .animate-step {
       animation: fadeSlide 0.2s ease-out forwards;
@@ -55,7 +55,7 @@
 
   <!-- SIMPLE, CLEAR TOP BAR -->
   <header class="sticky top-0 z-30 bg-[var(--card)] border-b border-[var(--border)] px-4 py-3 shadow-xs">
-    <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-2 flex-wrap">
       <!-- Home Button -->
       <button onclick="showHome()" class="touch-btn px-3.5 py-2 rounded-xl bg-[var(--secondary)] text-[var(--secondary-foreground)] font-bold text-sm flex items-center gap-2">
         <span>🏠</span>
@@ -82,7 +82,7 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT AREA (Single narrow column so eye knows exactly where to look) -->
+  <!-- MAIN CONTENT AREA -->
   <main id="mainView" class="max-w-2xl mx-auto px-4 pt-6">
   </main>
 
@@ -94,15 +94,11 @@
 
   <script>
     // ============================================================================
-    // ALLE 4 LEVELS – GANZ EINFACHE SPRACHE, KLARE SCHRITTE, KEIN BALLAST
-    // Jeder Schritt hat:
-    // - title: Der Begriff
-    // - icon: Ein klares Symbol
-    // - simpleText: 1-2 ganz einfache Sätze
-    // - tip: 1 kurzer Vergleich aus dem Schüler-Alltag
-    // - question: Eine direkte, einfache Frage dazu
-    // - options: 3 klare Antworten (die erste in der Liste ist die richtige, wird automatisch gemischt)
-    // - feedback: Kurze Bestätigung, warum das stimmt
+    // ALLE 4 LEVELS MIT 4 ABWECHSLUNGSREICHEN AUFGABEN-TYPEN:
+    // 1. "mc"        -> Auswahl aus 3 Antworten
+    // 2. "fill"      -> Lückentext mit Wort-Bausteinen zum Antippen
+    // 3. "truefalse" -> Stimmt das oder Quatsch? (2 grosse Knöpfe)
+    // 4. "pairs"     -> 3 Paare einander zuordnen (Links + Rechts antippen)
     // ============================================================================
     const LEVELS = [
       {
@@ -115,7 +111,8 @@
             title: "Webbrowser (Browser)",
             icon: "🧭",
             simpleText: "Ein <b>Browser</b> ist das Programm, mit dem du Internetseiten öffnest und anschaust. Bekannte Browser sind <b>Google Chrome, Firefox, Microsoft Edge</b> und <b>Safari</b>.",
-            tip: "Alltag: Ohne Browser könntest du keine einzige Webseite öffnen.",
+            tip: "Ohne Browser könntest du keine einzige Webseite öffnen.",
+            taskType: "mc",
             question: "Welches dieser Programme ist ein Webbrowser?",
             options: [
               "Mozilla Firefox, Google Chrome oder Microsoft Edge",
@@ -129,71 +126,67 @@
             icon: "🔗",
             simpleText: "Jede Webseite hat eine eigene Adresse, die du oben in den Browser tippst (zum Beispiel <code>https://www.wikipedia.org</code>). Der Fachbegriff für diese Webadresse heisst <b>URL</b>.",
             tip: "Merkhilfe: URL = Die Hausadresse einer Webseite im Internet.",
-            question: "Wie nennt man die Adresse einer Webseite mit Fachbegriff?",
-            options: [
-              "URL",
-              "WLAN",
-              "SMS"
-            ],
-            feedback: "Richtig! Die Adresse einer Webseite heisst URL."
+            taskType: "fill",
+            sentenceBefore: "Die Adresse einer Webseite im Internet nennt man mit Fachbegriff ",
+            sentenceAfter: ".",
+            words: ["URL", "SMS", "WLAN", "BCC"],
+            correctWord: "URL",
+            feedback: "Richtig! Die Adresse einer Webseite heisst URL (Uniform Resource Locator)."
           },
           {
             title: "Aufbau einer Webadresse (Domain)",
             icon: "🧩",
             simpleText: "Schauen wir uns <code>https://www.wikipedia.org</code> an:<br>• <b>www</b> ist der Rechnername.<br>• <b>wikipedia</b> ist der Hauptname (die <b>Domain</b>).<br>• <b>.org</b> (oder <b>.ch, .at, .de, .com</b>) ganz am Ende heisst <b>Top-Level-Domain</b>.",
             tip: "Die Endung hinten verrät oft das Land: .at = Österreich, .de = Deutschland, .ch = Schweiz.",
-            question: "Was ist «wikipedia» in der Adresse www.wikipedia.org?",
-            options: [
-              "Die Domain (der Hauptname der Webseite)",
-              "Ein E-Mail-Ordner",
-              "Ein Computervirus"
+            taskType: "pairs",
+            question: "Ordne die 3 Teile der Adresse «www.wikipedia.org» richtig zu!",
+            pairs: [
+              { left: "www", right: "Rechnername" },
+              { left: "wikipedia", right: "Domain (Hauptname)" },
+              { left: ".org / .at / .com", right: "Top-Level-Domain (Endung)" }
             ],
-            feedback: "Stimmt! Der Name in der Mitte ist die Domain, die Endung hinten (.org) ist die Top-Level-Domain."
+            feedback: "Perfekt zugeordnet! www = Rechnername, wikipedia = Domain, .org = Top-Level-Domain."
           },
           {
             title: "Startseite & Suchmaschine",
             icon: "🔍",
             simpleText: "Die <b>Startseite</b> öffnet sich automatisch, sobald du den Browser startest. Eine <b>Suchmaschine</b> (wie <b>Google</b> oder <b>Bing</b>) ist eine Webseite, mit der du nach Informationen im Internet suchst.",
-            tip: "Google ist also kein Browser, sondern eine Suchmaschine!",
-            question: "Wie heissen die zwei bekanntesten Suchmaschinen im Internet?",
-            options: [
-              "Google und Bing",
-              "Word und Excel",
-              "LAN und WAN"
-            ],
-            feedback: "Richtig! Google und Bing sind die grössten Suchmaschinen."
+            tip: "Achtung: Google und Bing sind Suchmaschinen, keine Browser!",
+            taskType: "truefalse",
+            statement: "Behauptung: «Google und Bing sind die zwei grössten Suchmaschinen im Internet.»",
+            isTrue: true,
+            feedback: "Stimmt genau! Google und Bing sind die bekanntesten Suchmaschinen."
           },
           {
             title: "Favoriten / Lesezeichen",
             icon: "⭐",
-            simpleText: "Wenn du eine Webseite oft brauchst, kannst du ihre Adresse im Browser speichern. Diese gespeicherten <b>Verknüpfungen (Links)</b> heissen <b>Favoriten</b> (bei Edge) oder <b>Lesezeichen</b> (bei Firefox).",
+            simpleText: "Wenn du eine Webseite oft brauchst, kannst du ihre Adresse im Browser mit dem Stern ⭐ speichern. Diese gespeicherten <b>Verknüpfungen (Links)</b> heissen <b>Favoriten</b> (bei Edge) oder <b>Lesezeichen</b> (bei Firefox).",
             tip: "Vorteil: Mit nur einem Klick bist du wieder auf deiner Lieblingsseite.",
-            question: "Was sind Favoriten bzw. Lesezeichen im Browser?",
-            options: [
-              "Gespeicherte Verknüpfungen (Links) zu Internetadressen",
-              "Unerwünschte Werbe-E-Mails",
-              "Kabellose Funknetzwerke"
-            ],
-            feedback: "Perfekt! Favoriten oder Lesezeichen sind gespeicherte Verknüpfungen (Links) zu Webseiten."
+            taskType: "fill",
+            sentenceBefore: "Favoriten (Microsoft Edge) oder Lesezeichen (Firefox) sind gespeicherte ",
+            sentenceAfter: " zu Internetadressen.",
+            words: ["Verknüpfungen (Links)", "Computerviren", "E-Mail-Anhänge", "Passwörter"],
+            correctWord: "Verknüpfungen (Links)",
+            feedback: "Perfekt! Favoriten oder Lesezeichen speichern Verknüpfungen (Links) zu Webseiten."
           },
           {
             title: "HTML & Links (WWW)",
             icon: "💻",
-            simpleText: "Alle Webseiten zusammen bilden das <b>WWW (World Wide Web)</b>. Gebaut werden Webseiten mit der Sprache <b>HTML</b> (Abkürzung für <b>Hypertext Markup Language</b>). Durch anklickbare <b>Links</b> sind die Webseiten miteinander verbunden.",
-            tip: "Übrigens: Neben dem WWW gibt es im Internet auch noch E-Mail, Chat und Internet-Telefonie (VoIP).",
-            question: "Wie wird «Hypertext Markup Language» (die Bauplan-Sprache für Webseiten) abgekürzt?",
-            options: [
-              "HTML",
-              "WLAN",
-              "ISP"
-            ],
+            simpleText: "Alle Webseiten zusammen bilden das <b>WWW (World Wide Web)</b>. Gebaut werden Webseiten mit der Sprache <b>HTML</b> (Abkürzung für <b>Hypertext Markup Language</b>). Durch anklickbare <b>Links</b> sind alle Webseiten miteinander verbunden.",
+            tip: "Neben dem WWW gibt es im Internet auch noch andere Dienste wie E-Mail, Chat oder Internet-Telefonie (VoIP).",
+            taskType: "fill",
+            sentenceBefore: "Die Bauplan-Sprache für Webseiten heisst Hypertext Markup Language und wird abgekürzt mit ",
+            sentenceAfter: ".",
+            words: ["HTML", "HTTP", "WLAN", "ISP"],
+            correctWord: "HTML",
             feedback: "Genau! HTML steht für Hypertext Markup Language."
           },
           {
             title: "ISP (Internet-Anbieter)",
             icon: "🔌",
             simpleText: "Damit du zuhause oder am Handy ins Internet kommst, brauchst du ein Abo bei einer Internet-Firma (z. B. Swisscom, Sunrise, A1, Drei oder Vodafone). Diese Firma nennt man <b>ISP (Internet Service Provider)</b>.",
-            tip: "Ohne ISP (Internet-Anbieter) hat dein Router zuhause keine Verbindung zum Internet.",
+            tip: "Ohne ISP (Internet-Anbieter) hast du keinen Zugang zum Internet.",
+            taskType: "mc",
             question: "Was ermöglicht der Internet Service Provider (ISP) den Kunden?",
             options: [
               "Er ermöglicht gegen eine Gebühr den Zugang zum Internet",
@@ -207,25 +200,25 @@
             icon: "📶",
             simpleText: "• <b>LAN</b> = Lokales Netzwerk in einem Gebäude, z. B. in <b>Schulen oder Firmen</b>.<br>• <b>WLAN</b> = Kabelloses Funk-Netzwerk (über einen WLAN-Router).<br>• <b>WAN</b> = Riesiges Netzwerk, das über <b>Länder und Kontinente</b> reicht.",
             tip: "Merkhilfe: LAN = im Gebäude, WLAN = ohne Kabel (Wireless), WAN = weltweit.",
-            question: "Wie nennt man ein lokales Netzwerk von Computern, zum Beispiel in einer Schule oder Firma?",
-            options: [
-              "LAN (Local Area Network)",
-              "WAN (Wide Area Network)",
-              "URL (Webadresse)"
+            taskType: "pairs",
+            question: "Verbinde jedes Netzwerk mit der richtigen Erklärung!",
+            pairs: [
+              { left: "LAN", right: "Lokales Netzwerk in Schule oder Firma" },
+              { left: "WLAN", right: "Kabelloses Funknetzwerk (über Router)" },
+              { left: "WAN", right: "Netzwerk über Länder & Kontinente" }
             ],
-            feedback: "Stimmt! Ein örtliches Netzwerk in der Schule oder Firma heisst LAN."
+            feedback: "Stark! LAN = lokal im Gebäude, WLAN = drahtlos per Funk, WAN = weitreichend über Kontinente."
           },
           {
             title: "Mobilfunk: 4G und 5G",
             icon: "📱",
             simpleText: "Wenn du unterwegs im Bus mit dem Handy surfst, nutzt du das <b>Mobilfunknetz</b>. Nach 4G (LTE) ist <b>5G</b> (5. Generation) heute die <b>neueste und schnellste</b> Mobilfunk-Datenübertragung.",
             tip: "Mit 5G werden Daten fast ohne Verzögerung (in Echtzeit) übertragen.",
-            question: "Wie heisst die neueste und schnellste Generation der Mobilfunk-Datenübertragung?",
-            options: [
-              "5G",
-              "SMS",
-              "HTML"
-            ],
+            taskType: "fill",
+            sentenceBefore: "Die neueste und schnellste Generation der Mobilfunk-Datenübertragung heisst ",
+            sentenceAfter: ".",
+            words: ["5G", "4G LTE", "MMS", "LAN"],
+            correctWord: "5G",
             feedback: "Genau! 5G ist die neueste und schnellste Mobilfunk-Generation."
           },
           {
@@ -233,12 +226,11 @@
             icon: "🏷️",
             simpleText: "Jedes Gerät, das mit dem Internet verbunden ist, hat eine eigene Kenn-Nummer aus Zahlen und Punkten (zum Beispiel <code>192.158.1.42</code>). Diese Nummer heisst <b>IP-Adresse</b>.",
             tip: "Wie eine Telefonnummer für deinen Computer – sie wird bei jedem Seitenaufruf mitgeschickt.",
-            question: "Ergänze: Jeder Computer, der mit dem Internet verbunden ist, hat eine eigene ...",
-            options: [
-              "IP-Adresse",
-              "Verteilerliste",
-              "Suchmaschine"
-            ],
+            taskType: "fill",
+            sentenceBefore: "Jeder Computer, der mit dem Internet verbunden ist, hat eine eigene ",
+            sentenceAfter: " (z. B. 192.158.1.42).",
+            words: ["IP-Adresse", "Verteilerliste", "Suchmaschine", "Startseite"],
+            correctWord: "IP-Adresse",
             feedback: "Volltreffer! Jedes Gerät im Internet hat eine eigene IP-Adresse."
           }
         ]
@@ -252,73 +244,67 @@
           {
             title: "E-Mail-Adresse (Wichtige Regeln)",
             icon: "📧",
-            simpleText: "Jede E-Mail-Adresse hat ein <b>@-Zeichen</b> (At-Zeichen), das den Namen und den Anbieter trennt (z. B. <code>max@schule.at</code>). Wichtig: In E-Mail-Adressen sind <b>keine Leerzeichen</b> und <b>keine Umlaute (ä, ö, ü)</b> erlaubt!",
+            simpleText: "Jede E-Mail-Adresse hat ein <b>@-Zeichen</b> (At-Zeichen), das den Benutzernamen und die Domain trennt (z. B. <code>max@schule.at</code>). Wichtig: In E-Mail-Adressen sind <b>keine Leerzeichen</b> und <b>keine Umlaute (ä, ö, ü)</b> erlaubt!",
             tip: "Heisst jemand Müller, schreibt man in der E-Mail-Adresse mueller.",
-            question: "Welche dieser E-Mail-Adressen funktioniert NICHT, weil sie gegen die Regeln verstösst?",
-            options: [
-              "max.müller@schule.at (wegen dem Umlaut ü)",
-              "max.mueller@schule.at",
-              "info@sportverein.org"
-            ],
-            feedback: "Richtig! Umlaute (ä, ö, ü) und Leerzeichen sind in E-Mail-Adressen verboten."
+            taskType: "truefalse",
+            statement: "Behauptung: «Die E-Mail-Adresse max.müller@schule.at ist gültig, weil Umlaute wie ü erlaubt sind.»",
+            isTrue: false,
+            feedback: "Richtig erkannt! Das stimmt NICHT – Umlaute (ä, ö, ü) und Leerzeichen sind in E-Mail-Adressen verboten."
           },
           {
             title: "Attachment (E-Mail-Anhang)",
             icon: "📎",
             simpleText: "Wenn du mit einer E-Mail eine Datei mitschickst (z. B. ein Foto oder ein PDF), nennt man das <b>Anhang</b> oder auf Englisch <b>Attachment</b>.",
-            tip: "Achtung Grenze: Bei Google Mail (Gmail) darf der Anhang maximal 25 MB gross sein, und Programmdateien (.exe) sind wegen Virengefahr gesperrt.",
-            question: "Wie lautet das englische Fachwort für einen E-Mail-Anhang?",
-            options: [
-              "Attachment",
-              "Browser",
-              "Popup"
-            ],
-            feedback: "Genau! Ein Anhang bei einer E-Mail heisst Attachment."
+            tip: "Bei Google Mail (Gmail) darf der Anhang maximal 25 MB gross sein, und Programmdateien (.exe) sind wegen Virengefahr gesperrt.",
+            taskType: "fill",
+            sentenceBefore: "Eine Datei, die zusammen mit einer E-Mail verschickt wird (Anhang), nennt man auf Englisch ",
+            sentenceAfter: ".",
+            words: ["Attachment", "Browser", "Popup", "Cookie"],
+            correctWord: "Attachment",
+            feedback: "Genau! Ein E-Mail-Anhang heisst auf Englisch Attachment."
           },
           {
             title: "E-Mail-Ordner (Ordnung im Postfach)",
             icon: "📂",
-            simpleText: "In deinem E-Mail-Programm gibt es feste Ordner:<br>• <b>Posteingang</b> = erhaltene Mails<br>• <b>Entwürfe</b> = angefangene Mails für später<br>• <b>Papierkorb</b> = gelöschte Mails (noch rettbar)<br>• <b>Spam (oder Junk)</b> = unerwünschte Werbe-Mails",
-            tip: "Spam ist wie unerwünschte Werbung im Briefkasten.",
-            question: "In welchem E-Mail-Ordner landen unerwünschte Werbe-Mails?",
-            options: [
-              "Spam bzw. Junk",
-              "Entwürfe",
-              "Gesendete Elemente"
+            simpleText: "In deinem E-Mail-Programm gibt es feste Ordner:<br>• <b>Posteingang</b> = empfangene Mails<br>• <b>Entwürfe</b> = angefangene Mails für später<br>• <b>Papierkorb</b> = gelöschte Mails (noch rettbar)<br>• <b>Spam (oder Junk)</b> = unerwünschte Werbe-Mails",
+            tip: "Spam bzw. Junk ist wie der Abfalleimer für unerwünschte Werbung.",
+            taskType: "pairs",
+            question: "Ordne jeden E-Mail-Ordner seiner Aufgabe zu!",
+            pairs: [
+              { left: "Spam bzw. Junk", right: "Unerwünschte Werbe-E-Mails" },
+              { left: "Entwürfe", right: "E-Mails, die später fertig gesendet werden" },
+              { left: "Papierkorb", right: "Gelöschte Mails (wiederherstellbar)" }
             ],
-            feedback: "Richtig! Unerwünschte E-Mails kommen in den Ordner Spam bzw. Junk."
+            feedback: "Super! Spam/Junk = unerwünschte Mails, Entwürfe = für später, Papierkorb = gelöschte Mails."
           },
           {
             title: "An, CC und BCC (Wer liest mit?)",
             icon: "🕵️",
             simpleText: "Beim Schreiben einer E-Mail gibt es drei Felder für Empfänger:<br>• <b>An</b> = Hauptempfänger<br>• <b>CC</b> = Offene Kopie (jeder sieht die Adresse)<br>• <b>BCC</b> = <b>Geheime Kopie</b> (andere Empfänger sehen <b>NICHT</b>, wer im BCC steht!).",
-            tip: "BCC schützt den Datenschutz, weil fremde E-Mail-Adressen geheim bleiben.",
-            question: "Sehen die anderen Empfänger einer E-Mail, wer im Feld BCC eingetragen wurde?",
-            options: [
-              "Nein, Empfänger im Feld BCC bleiben für andere unsichtbar",
-              "Ja, jeder sieht alle BCC-Adressen sofort",
-              "Nur wenn man ein Foto anhängt"
-            ],
-            feedback: "Perfekt! BCC (Blind Carbon Copy) hält die Empfänger für alle anderen geheim."
+            tip: "BCC schützt den Datenschutz, weil die Empfängerliste nicht offengelegt wird.",
+            taskType: "truefalse",
+            statement: "Frage: Sehen die anderen Empfänger einer E-Mail die Adressen, die im Feld BCC eingetragen wurden?",
+            isTrue: false,
+            feedback: "Genau! Nein – bei BCC (Blind Carbon Copy) bleiben die Adressen für andere Empfänger unsichtbar."
           },
           {
             title: "Verteilerliste (Kontaktliste)",
             icon: "👥",
             simpleText: "Möchte ein Verein oder eine Lehrperson eine E-Mail an 30 Personen <b>gleichzeitig</b> schicken, speichert man alle Adressen einmal in einer <b>Verteilerliste (Kontaktliste)</b>.",
             tip: "Das funktioniert wie eine WhatsApp-Gruppe – nur für E-Mails.",
-            question: "Ein Verein möchte an alle Mitglieder gleichzeitig E-Mails senden. Was erstellt er dafür?",
-            options: [
-              "Eine Verteilerliste (Kontaktliste)",
-              "Eine Startseite",
-              "Einen Computervirus"
-            ],
-            feedback: "Stimmt! Mit einer Verteilerliste schickt man eine E-Mail gleichzeitig an eine ganze Gruppe."
+            taskType: "fill",
+            sentenceBefore: "Ein Verein möchte an alle Mitglieder gleichzeitig E-Mails versenden. Er erstellt praktischerweise eine ",
+            sentenceAfter: ".",
+            words: ["Verteilerliste (Kontaktliste)", "Startseite", "IP-Adresse", "Suchmaschine"],
+            correctWord: "Verteilerliste (Kontaktliste)",
+            feedback: "Stimmt! Mit einer Verteilerliste schickt man eine E-Mail gleichzeitig an alle Mitglieder."
           },
           {
             title: "Blog & Mikroblog",
             icon: "✍️",
             simpleText: "Ein <b>Blog</b> ist eine Webseite, die wie ein öffentliches Tagebuch geführt wird (mit laufend neuen Beiträgen). Werden dort nur ganz kurze Textnachrichten gepostet (wie bei Twitter / X), heisst das <b>Mikroblog</b>.",
-            tip: "Mikro bedeutet klein -> Mikroblog = ganz kurze Posts.",
+            tip: "Mikro bedeutet klein -> Mikroblog = kurze Textnachrichten.",
+            taskType: "mc",
             question: "Was versteht man unter einem Blog?",
             options: [
               "Eine tagebuchartige, öffentlich geführte Webseite",
@@ -332,26 +318,28 @@
             icon: "🎙️",
             simpleText: "• Ein <b>Podcast</b> ist eine Audio- oder Videosendung, die man im Internet jederzeit abrufen kann (z. B. auf Spotify oder YouTube).<br>• Ein <b>Online-Lexikon (Online-Enzyklopädie)</b> ist ein Nachschlagewerk im Internet – das bekannteste ist <b>Wikipedia</b>.",
             tip: "Früher schlug man in dicken Büchern nach, heute bei Wikipedia.",
-            question: "Was ist ein Podcast?",
-            options: [
-              "Audio- oder Videodateien, die man über das Internet abrufen kann",
-              "Eine unerwünschte Werbe-E-Mail",
-              "Die geheime Nummer eines Computers"
+            taskType: "pairs",
+            question: "Ordne die 3 Medien-Begriffe richtig zu!",
+            pairs: [
+              { left: "Podcast", right: "Abrufbare Audio- oder Videodateien" },
+              { left: "Wikipedia", right: "Online-Lexikon (Online-Enzyklopädie)" },
+              { left: "Mikroblog", right: "Kurze Text-Postings (z. B. Twitter)" }
             ],
-            feedback: "Genau! Podcasts sind Hör- oder Videobeiträge im Internet."
+            feedback: "Perfekt! Podcast = Audio/Video auf Abruf, Wikipedia = Online-Lexikon, Mikroblog = kurze Postings."
           },
           {
             title: "SMS, MMS & Soziale Netzwerke",
             icon: "💬",
-            simpleText: "• <b>SMS</b> = kurze Textnachricht über das Handynetz.<br>• <b>MMS</b> = Nachricht mit Bild/Video übers Handynetz (heute fast komplett durch <b>WhatsApp</b> ersetzt).<br>• <b>Soziale Netzwerke</b> = Plattformen wie Instagram, YouTube, TikTok, Facebook und WhatsApp.",
-            tip: "Über soziale Netzwerke tauschen sich Menschen weltweit mit Texten, Bildern und Videos aus.",
-            question: "Wodurch wurde die alte Multimedia-Nachricht MMS heute fast komplett abgelöst?",
+            simpleText: "• <b>SMS</b> = kurze Textnachricht über das Handynetz.<br>• <b>MMS</b> = Nachricht mit Bild/Video übers Handynetz (heute ersetzt durch <b>WhatsApp</b>).<br>• <b>Soziale Netzwerke</b> = Plattformen wie Instagram, YouTube, TikTok, Facebook und WhatsApp.",
+            tip: "Über soziale Netzwerke kommunizieren Menschen weltweit miteinander.",
+            taskType: "mc",
+            question: "Wodurch wurde die alte Multimedia-Nachricht MMS heute fast komplett ersetzt?",
             options: [
-              "Durch Internet-Messenger wie WhatsApp",
-              "Durch das Online-Lexikon Wikipedia",
-              "Durch den Papierkorb im E-Mail-Programm"
+              "Durch Messenger wie WhatsApp",
+              "Durch den Papierkorb im E-Mail-Programm",
+              "Durch das LAN-Kabel im Schulzimmer"
             ],
-            feedback: "Stimmt! Bilder und Videos verschickt man heute meist über Apps wie WhatsApp statt per MMS."
+            feedback: "Stimmt! Bilder und Videos verschickt man heute über Apps wie WhatsApp statt per MMS."
           }
         ]
       },
@@ -366,78 +354,74 @@
             icon: "🛍️",
             simpleText: "Wenn du über das Internet einkaufst oder verkaufst (z. B. bei Amazon, Zalando oder eBay), heisst das <b>elektronischer Handel</b> oder mit Fachbegriff <b>E-Commerce</b>.",
             tip: "Vorteil: Du bist nicht an Ladenöffnungszeiten gebunden und kannst bequem von daheim bestellen.",
-            question: "Wie lautet der englische Fachbegriff für «elektronischer Handel» (Einkaufen im Internet)?",
-            options: [
-              "E-Commerce",
-              "E-Government",
-              "E-Learning"
-            ],
+            taskType: "fill",
+            sentenceBefore: "Der Fachbegriff für elektronischen Handel (Einkaufen im Internet, z. B. bei Amazon oder eBay) lautet ",
+            sentenceAfter: ".",
+            words: ["E-Commerce", "E-Government", "E-Banking", "E-Learning"],
+            correctWord: "E-Commerce",
             feedback: "Genau! Elektronischer Handel im Internet heisst E-Commerce."
-          },
-          {
-            title: "E-Banking (Online-Banking)",
-            icon: "🏦",
-            simpleText: "Mit <b>E-Banking</b> erledigst du deine Bankgeschäfte direkt am Computer oder Smartphone: Du kannst Geld überweisen, Online-Einkäufe bezahlen und deinen Kontostand prüfen.",
-            tip: "Beim E-Banking sieht man vergangene Überweisungen oft bis zu 7 Jahre zurück.",
-            question: "Was erledigt man beim E-Banking?",
-            options: [
-              "Bankgeschäfte und Geldüberweisungen über das Internet",
-              "Das Löschen von Computerviren",
-              "Das Aufnehmen von Podcasts"
-            ],
-            feedback: "Richtig! Bankgeschäfte am Computer oder Handy heissen E-Banking."
           },
           {
             title: "E-Government (Ämter & Behörden online)",
             icon: "🏛️",
             simpleText: "Früher musste man für jedes Formular persönlich aufs Gemeindeamt oder Finanzamt gehen. Heute kann man solche <b>Behördengänge und Amtswege online</b> erledigen – das heisst <b>E-Government</b>.",
             tip: "Merkhilfe: Das englische Wort «Government» bedeutet Regierung / Staat / Behörde.",
-            question: "Wie heisst der Fachausdruck für das Erledigen von Amtswegen und Behördengängen über das Internet?",
-            options: [
-              "E-Government",
-              "E-Commerce",
-              "E-Banking"
-            ],
+            taskType: "fill",
+            sentenceBefore: "Der Fachausdruck für die Abwicklung von Amtswegen und Behördengängen über das Internet heisst ",
+            sentenceAfter: ".",
+            words: ["E-Government", "E-Commerce", "E-Learning", "Phishing"],
+            correctWord: "E-Government",
             feedback: "Volltreffer! Behördengänge über das Internet nennt man E-Government."
           },
           {
-            title: "E-Learning (Lernen mit digitalen Medien)",
+            title: "E-Banking & E-Learning",
             icon: "🎓",
-            simpleText: "Überall dort, wo beim Lernen digitale Medien eingesetzt werden (Lernvideos, Sprach-Apps, Plattformen wie <b>Microsoft Teams</b> oder <b>Google Classroom</b> – oder dieses Programm hier!), spricht man von <b>E-Learning</b>.",
-            tip: "Learning = Lernen -> E-Learning = Elektronisches / digitales Lernen.",
-            question: "Welche Plattformen spielen beim E-Learning in der Schule eine grosse Rolle?",
-            options: [
-              "Lernplattformen wie Microsoft Teams und Google Classroom",
-              "Online-Auktionshäuser wie eBay",
-              "Reine Antivirenprogramme"
+            simpleText: "• <b>E-Banking</b> = Bankgeschäfte und Überweisungen am Computer oder Handy erledigen.<br>• <b>E-Learning</b> = Lernen mit digitalen Medien (z. B. Lernvideos oder Plattformen wie <b>Microsoft Teams</b> und <b>Google Classroom</b>).",
+            tip: "Jetzt kennst du alle 4 grossen E-Wörter: E-Commerce, E-Government, E-Banking und E-Learning!",
+            taskType: "pairs",
+            question: "Ordne die E-Begriffe ihrer richtigen Bedeutung zu!",
+            pairs: [
+              { left: "E-Commerce", right: "Einkaufen im Internet (Online-Handel)" },
+              { left: "E-Banking", right: "Bankgeschäfte & Überweisungen online" },
+              { left: "E-Learning", right: "Lernen mit digitalen Medien (z. B. Teams)" }
             ],
-            feedback: "Stimmt! Digitale Lernplattformen und Lernvideos gehören zum E-Learning."
+            feedback: "Perfekt! Damit hast du alle E-Wörter sicher im Griff."
           },
           {
             title: "Urheberrecht (Schutz von Werken)",
             icon: "🎨",
-            simpleText: "Wer ein Lied, ein Foto, ein Video oder einen Text selbst macht, ist der Urheber. Das <b>Urheberrecht</b> schützt dieses <b>geistige Eigentum</b>. Man darf fremde Bilder oder Musik aus dem Netz nicht einfach ohne Erlaubnis verwenden!",
-            tip: "Wichtige Zahl: Der Schutz gilt sehr lange – er endet erst 70 Jahre nach dem Tod des Urhebers.",
-            question: "Was schützt das Urheberrecht (bis 70 Jahre nach dem Tod des Machers)?",
-            options: [
-              "Das geistige Eigentum der Urheber (Musik, Bilder, Videos, Texte)",
-              "Die Geschwindigkeit des WLAN-Routers",
-              "Das Passwort beim Online-Banking"
-            ],
-            feedback: "Genau! Das Urheberrecht schützt das geistige Eigentum bis 70 Jahre nach dem Tod des Urhebers."
+            simpleText: "Wer ein Lied, ein Foto, ein Video oder einen Text selbst erschafft, ist der Urheber. Das <b>Urheberrecht</b> schützt dieses <b>geistige Eigentum</b> bis <b>70 Jahre nach dem Tod des Urhebers</b>.",
+            tip: "Man darf fremde Bilder oder Musik aus dem Internet nicht einfach ohne Erlaubnis kopieren!",
+            taskType: "fill",
+            sentenceBefore: "Das Urheberrecht schützt das ",
+            sentenceAfter: " der Urheber (Musik, Bilder, Videos, Texte) bis 70 Jahre nach deren Tod.",
+            words: ["geistige Eigentum", "WLAN-Passwort", "Bankkonto", "E-Mail-Postfach"],
+            correctWord: "geistige Eigentum",
+            feedback: "Genau! Das Urheberrecht schützt das geistige Eigentum der Urheber."
+          },
+          {
+            title: "Schutzfrist beim Urheberrecht",
+            icon: "⏳",
+            simpleText: "Viele denken, dass man Bilder oder Lieder auf Google oder TikTok einfach frei für eigene Projekte nutzen darf. Doch das Urheberrecht gilt sehr lange: Es endet erst <b>70 Jahre nach dem Tod</b> des Urhebers!",
+            tip: "Bei jeder Nutzung von fremden Werken muss das Urheberrecht beachtet werden.",
+            taskType: "truefalse",
+            statement: "Behauptung: «Sobald ein Foto bei Google Bilder zu finden ist, darf es jeder ohne Urheberrecht frei verkaufen.»",
+            isTrue: false,
+            feedback: "Richtig erkannt! Das ist falsch – das Urheberrecht gilt bis 70 Jahre nach dem Tod des Urhebers."
           },
           {
             title: "Seriöse Webseite erkennen (Impressum)",
             icon: "🧐",
-            simpleText: "Im Internet kann jeder eine Webseite erstellen. Ob eine Seite echt und vertrauenswürdig (<b>seriös</b>) ist, erkennst du an 3 Punkten:<br>1. Stehen im <b>Impressum</b> Name und Kontaktdaten des Betreibers?<br>2. Ist der Inhalt sauber und glaubwürdig?<br>3. Was sagen <b>Bewertungen</b> anderer Nutzer?",
-            tip: "Fehlt auf einer Shop-Webseite das Impressum mit echter Adresse, ist oft Betrug im Spiel!",
-            question: "Wo auf einer Webseite findest du den verantwortlichen Betreiber und seine Kontaktdaten?",
+            simpleText: "Ob eine Webseite echt und vertrauenswürdig (<b>seriös</b>) ist, prüfst du an 3 Punkten:<br>1. Stehen im <b>Impressum</b> Autor, Herausgeber und Kontaktdaten?<br>2. Ist die Qualität des Inhalts gut?<br>3. Was sagen <b>Bewertungen</b> anderer User?",
+            tip: "Fehlt auf einer Webseite das Impressum mit echter Adresse, ist Vorsicht geboten!",
+            taskType: "mc",
+            question: "Wo auf einer Webseite müssen Name, Herausgeber und Kontaktdaten stehen, damit sie seriös ist?",
             options: [
               "Im Impressum",
               "Im E-Mail-Papierkorb",
-              "In den Favoriten"
+              "In der Chronik"
             ],
-            feedback: "Richtig! Im Impressum müssen Herausgeber und Kontaktdaten stehen."
+            feedback: "Richtig! Im Impressum kontrolliert man Herausgeber und Kontaktdaten."
           }
         ]
       },
@@ -450,21 +434,21 @@
           {
             title: "HTTP und HTTPS (Verschlüsselung)",
             icon: "🔒",
-            simpleText: "Beginnt eine Webadresse mit <b>https://</b>, steht das <b>«s» für «secure» (sicher)</b>. Das bedeutet: Alle Daten werden <b>verschlüsselt</b> übertragen, damit niemand mitlesen kann. Du erkennst das auch am <b>Vorhängeschloss 🔒</b>.",
-            tip: "Besonders beim Online-Banking und Einkaufen muss immer https:// oben stehen!",
-            question: "Wofür steht der Buchstabe «s» bei https:// ?",
-            options: [
-              "Für «secure» – also eine sichere, verschlüsselte Übertragung",
-              "Für «schnell» – also doppelte Internetgeschwindigkeit",
-              "Für «Startseite» – die erste Seite im Browser"
-            ],
+            simpleText: "Beginnt eine Webadresse mit <b>https://</b>, steht das <b>«s» für «secure» (sicher)</b>. Das bedeutet: Alle Daten werden <b>verschlüsselt</b> übertragen, damit niemand mitlesen kann. Du erkennst das am <b>Vorhängeschloss 🔒</b>.",
+            tip: "Besonders beim Online-Banking muss immer https:// oben stehen!",
+            taskType: "fill",
+            sentenceBefore: "Der Buchstabe «s» in https:// steht für ",
+            sentenceAfter: " (sichere, verschlüsselte Übertragung).",
+            words: ["secure", "schnell", "search", "server"],
+            correctWord: "secure",
             feedback: "Genau! Das s in HTTPS steht für secure (sicher / verschlüsselt)."
           },
           {
             title: "Digitales Zertifikat",
             icon: "📜",
-            simpleText: "Wenn du oben in der Adressleiste auf das <b>Vorhängeschloss 🔒</b> klickst, siehst du das <b>digitale Zertifikat</b>. Das ist der offizielle digitale Ausweis einer geschützten Webseite. Ausgestellt wird er von unabhängigen Prüfstellen (<b>Zertifizierungsstellen</b> wie GlobalSign oder Verisign).",
-            tip: "Das digitale Zertifikat beweist, dass die Bank-Webseite wirklich echt ist.",
+            simpleText: "Klickst du oben in der Adressleiste auf das <b>Vorhängeschloss 🔒</b>, siehst du das <b>digitale Zertifikat</b>. Es bestätigt den Inhaber und die Echtheit der Webseite und wird von unabhängigen <b>Zertifizierungsstellen</b> (z. B. GlobalSign oder Verisign) ausgestellt.",
+            tip: "Das digitale Zertifikat ist wie der offizielle Reisepass einer Webseite.",
+            taskType: "mc",
             question: "Ergänze: Geschützte Webseiten besitzen ein digitales ______, das von unabhängigen ______ ausgegeben wird.",
             options: [
               "Zertifikat  /  Zertifizierungsstellen",
@@ -476,118 +460,91 @@
           {
             title: "Phishing (Die Betrugs-Falle)",
             icon: "🎣",
-            simpleText: "Beim <b>Phishing</b> schicken Betrüger täuschend echt aussehende E-Mails (z. B. angeblich von deiner Bank oder Paketpost). Sie wollen dich auf eine <b>gefälschte Webseite</b> locken, damit du dort dein Passwort oder Bankdaten eingibst.",
-            tip: "Gibst du dort deine Daten ein, drohen Identitätsdiebstahl und Geldverlust!",
-            question: "Wie nennt man den Betrugsversuch, Personen per E-Mail auf gefälschte Webseiten zu locken, um geheime Zugangsdaten zu stehlen?",
-            options: [
-              "Phishing",
-              "E-Learning",
-              "Podcasting"
-            ],
-            feedback: "Richtig! Dieser gefährliche Datenklau per Fake-Mail und Fake-Webseite heisst Phishing."
+            simpleText: "Beim <b>Phishing</b> schicken Betrüger gefälschte E-Mails (z. B. angeblich von deiner Bank). Sie wollen dich auf eine <b>gefälschte Webseite</b> locken, damit du dort Passwörter oder Bankdaten eingibst.",
+            tip: "Gibst du auf einer gefälschten Seite Daten ein, drohen Identitätsdiebstahl und Betrug!",
+            taskType: "fill",
+            sentenceBefore: "Versuche, Personen per E-Mail auf gefälschte Webseiten zu locken, um geheime Zugangsdaten zu stehlen, nennt man ",
+            sentenceAfter: ".",
+            words: ["Phishing", "Podcasting", "E-Government", "Roaming"],
+            correctWord: "Phishing",
+            feedback: "Richtig! Dieser gefährliche Betrugsversuch per Fake-Mail heisst Phishing."
           },
           {
             title: "Cookies",
             icon: "🍪",
-            simpleText: "<b>Cookies</b> sind kleine Textdateien, die eine besuchte Webseite auf deinem Gerät speichert. Sie merken sich persönliche Infos über dich (z. B. Sprache, Login oder Warenkorb). Beim Öffnen einer Seite wirst du gefragt, was mit den Cookies passieren soll.",
-            tip: "Manche Seiten (wie Online-Banking) funktionieren nur, wenn man notwendige Cookies erlaubt.",
-            question: "Welche zwei Möglichkeiten hast du, wenn dich eine Webseite nach Cookies fragt?",
+            simpleText: "<b>Cookies</b> sind kleine Textdateien, die eine besuchte Webseite auf deinem Gerät speichert. Sie speichern persönliche Infos über den Nutzer! Beim Surfen wirst du gefragt, ob du Cookies <b>zulassen</b> oder <b>blockieren</b> willst.",
+            tip: "Viele Webseiten (wie Online-Banking) funktionieren nur, wenn Cookies zugelassen werden.",
+            taskType: "mc",
+            question: "Sehr oft wird man beim Surfen gefragt, was mit Cookies passieren soll. Welche zwei Möglichkeiten hat man?",
             options: [
-              "Cookies zulassen (akzeptieren) oder blockieren (ablehnen)",
-              "Cookies ausdrucken oder per Post schicken",
-              "Cookies in den Spam-Ordner verschieben"
+              "Cookies zulassen oder blockieren",
+              "Cookies ausdrucken oder per SMS schicken",
+              "Cookies in den Papierkorb oder Entwürfe verschieben"
             ],
-            feedback: "Stimmt! Du kannst Cookies zulassen oder blockieren."
+            feedback: "Stimmt! Du kannst Cookies im Browser zulassen oder blockieren."
           },
           {
-            title: "Verlauf (Edge) / Chronik (Firefox)",
+            title: "Verlauf / Chronik & Autovervollständigen",
             icon: "🕒",
-            simpleText: "Dein Browser speichert im Hintergrund eine Liste aller Webseiten, die du besucht hast. Bei Microsoft Edge heisst diese Liste <b>Verlauf</b>, bei Firefox heisst sie <b>Chronik</b>.",
-            tip: "In den Browser-Einstellungen kannst du den Verlauf bzw. die Chronik jederzeit löschen.",
-            question: "Was wird im Verlauf (Edge) bzw. in der Chronik (Firefox) gespeichert?",
-            options: [
-              "Die Links zu den Webseiten, die du zuvor besucht hast",
-              "Deine gelöschten Fotos vom Smartphone",
-              "Alle Musikdateien auf deinem Computer"
-            ],
-            feedback: "Richtig! Im Verlauf bzw. in der Chronik stehen alle besuchten Webseiten."
-          },
-          {
-            title: "Autovervollständigen (Formulardaten)",
-            icon: "⌨️",
-            simpleText: "Wenn du auf einer Webseite ein Formular ausfüllst (Name, Adresse, E-Mail), merkt sich der Browser deine Eingaben fürs nächste Mal. Das heisst <b>Autovervollständigen</b>. In <b>Firefox</b> löscht man diese Daten über: <b>Chronik → Neueste Chronik löschen</b> (bzw. Chronik leeren).",
-            tip: "So erspart man sich zuhause das ständige Neutippen der eigenen Adresse.",
-            question: "Wie kannst du im Browser Firefox gespeicherte Formulardaten (Autovervollständigen) wieder löschen?",
+            simpleText: "• Im <b>Verlauf</b> (Edge) bzw. in der <b>Chronik</b> (Firefox) speichert der Browser alle besuchten Webseiten.<br>• Beim <b>Autovervollständigen</b> merkt sich der Browser deine Eingaben in Formularen (Name, Adresse). In Firefox löscht man das über: <b>Chronik → Neueste Chronik löschen</b>.",
+            tip: "So kannst du deine Spuren im Browser jederzeit wieder sauber löschen.",
+            taskType: "mc",
+            question: "Wie können gespeicherte Formulardaten (Autovervollständigen) im Browser Firefox gelöscht werden?",
             options: [
               "Über Chronik → Neueste Chronik löschen (bzw. Chronik leeren)",
-              "Durch Aus- und Einschalten des Bildschirms",
-              "Indem man das LAN-Kabel aussteckt"
+              "Durch Ausstecken des WLAN-Routers",
+              "Durch Drücken auf das Vorhängeschloss"
             ],
             feedback: "Genau! In Firefox geht das über Chronik → Neueste Chronik löschen (Chronik leeren)."
           },
           {
             title: "Passwörter speichern & Unberechtigter Zugriff",
             icon: "🚫",
-            simpleText: "Der Browser fragt beim Login oft: «Passwort speichern?». Auf fremden oder <b>öffentlichen Computern</b> (in der Schule, Bibliothek oder im Hotel) darfst du Passwörter <b>NIEMALS speichern</b>! Sonst loggt sich der Nächste in dein Konto ein – das nennt man <b>unberechtigten Zugriff</b>.",
-            tip: "Goldene Regel: Fremder Computer = Passwort nie speichern & am Schluss immer abmelden!",
-            question: "Warum darfst du auf einem öffentlichen Computer (z. B. in der Schule oder im Hotel) niemals dein Passwort im Browser speichern?",
-            options: [
-              "Weil sonst andere Personen unberechtigten Zugriff auf dein Konto haben",
-              "Weil der Computer sonst zu langsam wird",
-              "Weil das WLAN dadurch ausgeschaltet wird"
-            ],
-            feedback: "Stimmt! Auf öffentlichen Computern dürfen Passwörter nie gespeichert werden."
+            simpleText: "Der Browser bietet oft an, dein Passwort zu speichern. Aber Achtung: Auf <b>öffentlichen Computern</b> (in der Schule, Bibliothek oder im Hotel) dürfen Passwörter <b>nie gespeichert</b> werden! Sonst greift der Nächste auf deine Daten zu (<b>unberechtigter Zugriff</b>).",
+            tip: "Fremder Computer = Passwort niemals speichern!",
+            taskType: "truefalse",
+            statement: "Behauptung: «Auf öffentlichen Computern (z. B. in der Schule oder im Hotel) sollte man seine Passwörter im Browser speichern, damit es schneller geht.»",
+            isTrue: false,
+            feedback: "Richtig! Das darf man NIEMALS tun, sonst haben Fremde unberechtigten Zugriff auf dein Konto."
           },
           {
-            title: "Sensible Daten & Datenschutz (DSGVO)",
+            title: "Sensible Daten, DSGVO, Viren & Popups",
             icon: "🛡️",
-            simpleText: "Persönliche Angaben wie dein Name, deine Adresse, dein Geburtsdatum und deine Bankdaten heissen <b>sensible Daten</b>. Das Datenschutzgesetz (<b>DSGVO</b>) schützt dich: Firmen dürfen nur nötige Daten sammeln, und du hast jederzeit das Recht auf <b>Einsicht</b> und <b>Richtigstellung</b> falscher Daten.",
-            tip: "DSGVO = Datenschutz-Grundverordnung.",
-            question: "Welche Rechte hat jede Person laut der Datenschutzgrundverordnung (DSGVO)?",
-            options: [
-              "Einsicht in die eigenen gespeicherten Daten nehmen und falsche Daten richtigstellen lassen",
-              "Kostenlos bei jedem Online-Shop einkaufen",
-              "Fremde Musik ohne Urheberrecht kopieren"
+            simpleText: "• <b>Sensible Daten</b> = persönliche Daten (Name, Adresse, Geburtsdatum, Bankdaten).<br>• <b>DSGVO</b> (Datenschutzgesetz) = gibt dir das Recht auf <b>Einsicht</b> und <b>Richtigstellung</b> deiner Daten.<br>• <b>Computerviren</b> = Schadprogramme (Schutz: <b>Windows Defender</b>).<br>• <b>Popups</b> = aufspringende Werbefenster (im Browser blockieren!).",
+            tip: "Mit diesen 4 Begriffen bist du ein echter Sicherheits-Profi.",
+            taskType: "pairs",
+            question: "Verbinde jeden Sicherheits-Begriff mit der passenden Erklärung!",
+            pairs: [
+              { left: "DSGVO", right: "Recht auf Einsicht & Richtigstellung eigener Daten" },
+              { left: "Windows Defender", right: "Antivirenprogramm gegen Computerviren" },
+              { left: "Popups", right: "Aufspringende Werbefenster (blockieren!)" }
             ],
-            feedback: "Richtig! Laut DSGVO hast du das Recht auf Einsicht und Korrektur deiner gespeicherten Daten."
-          },
-          {
-            title: "Computerviren & Popups",
-            icon: "🦠",
-            simpleText: "• <b>Computerviren</b> sind Schadprogramme (<b>Malware</b>). Deshalb braucht jeder PC ein <b>Antivirenprogramm</b> (bei Windows 10/11 ist <b>Windows Defender</b> schon eingebaut).<br>• <b>Popups</b> sind plötzlich aufspringende Werbefenster – man sollte sie in den Browser-Einstellungen <b>blockieren</b>.",
-            tip: "Klicke bei aufspringenden Werbe-Popups nie auf «Gewinn abholen»!",
-            question: "Was ist «Windows Defender» und wovor schützt er?",
-            options: [
-              "Ein eingebautes Antivirenprogramm, das vor Computerviren (Malware) schützt",
-              "Ein Internet-Browser wie Firefox",
-              "Ein Kabel für das Schulnetzwerk"
-            ],
-            feedback: "Genau! Windows Defender ist ein Antivirenprogramm gegen Schadsoftware (Malware)."
+            feedback: "Klasse! DSGVO = Datenschutzrecht, Windows Defender = Virenschutz, Popups = Werbefenster."
           },
           {
             title: "Zugriffskontrolle für Kinder (Kindersicherung)",
             icon: "⏳",
-            simpleText: "Eltern können den Internetzugang für Kinder auf <b>zwei Arten</b> einschränken:<br>1. <b>Zeitliche Einschränkung</b> (wie lange pro Tag, z. B. mit Kindersicherungs-Software oder am Modem/Router).<br>2. <b>Inhaltliche Einschränkung</b> (ein <b>Inhaltsfilter</b> sperrt ungeeignete Webseiten).",
-            tip: "Merkhilfe: 1. Wie lange (Zeit) und 2. Was (Inhaltsfilter).",
-            question: "Wodurch kann für Kinder der Zugriff zum Internet eingeschränkt werden?",
-            options: [
-              "Durch zeitliche Einschränkung (Kindersicherung/Modem) und inhaltliche Einschränkung (Inhaltsfilter)",
-              "Durch das Verwenden von BCC statt CC bei E-Mails",
-              "Nur indem man den Computer komplett verkauft"
+            simpleText: "Für Kinder kann der Zugriff zum Internet auf <b>zwei Arten</b> eingeschränkt werden:<br>1. <b>Zeitliche Einschränkung</b> (Kindersicherung-Software oder Einstellung am Modem).<br>2. <b>Inhaltliche Einschränkung</b> (ein <b>Inhaltsfilter</b> sperrt ungeeignete Seiten).",
+            tip: "Merkhilfe: 1. Zeit begrenzen (Kindersicherung) und 2. Inhalt filtern (Inhaltsfilter).",
+            taskType: "pairs",
+            question: "Ordne die Begriffe zur Zugriffskontrolle richtig zu!",
+            pairs: [
+              { left: "Zeitliche Einschränkung", right: "Kindersicherung (Software) / Modem-Einstellung" },
+              { left: "Inhaltliche Einschränkung", right: "Inhaltsfilter gegen ungeeignete Webseiten" },
+              { left: "Sensible Daten", right: "Name, Adresse, Geburtsdatum, Bankdaten" }
             ],
-            feedback: "Perfekt! Man unterscheidet die zeitliche Einschränkung und die inhaltliche Einschränkung (Inhaltsfilter)."
+            feedback: "Perfekt! Damit hast du alle Sicherheits-Fragen gemeistert."
           }
         ]
       }
     ];
 
     // ============================================================================
-    // STATE MANAGEMENT (Speichert automatisch auf dem iPad)
+    // STATE MANAGEMENT
     // ============================================================================
     const STORAGE_KEY = "webfuehrerschein_v2";
     let state = {
       name: "",
-      // solvedSteps[levelId] = array of step indices solved
       solvedSteps: { 1: [], 2: [], 3: [], 4: [] }
     };
 
@@ -595,6 +552,14 @@
     let activeStepIndex = 0;
     let currentShuffledOptions = [];
     let stepAnsweredCorrectly = false;
+
+    // State for "pairs" matching game
+    let pairsState = {
+      leftItems: [],
+      rightItems: [],
+      selectedLeftIdx: null,
+      matchedLeftIndices: []
+    };
 
     function loadState() {
       try {
@@ -632,8 +597,17 @@
       if (el) el.textContent = getTotalProgress().pct;
     }
 
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
     // ============================================================================
-    // AUDIO VORLESEN (Hilfe für schwache Leser)
+    // AUDIO VORLESEN
     // ============================================================================
     function speak(text) {
       if (!("speechSynthesis" in window)) return;
@@ -646,7 +620,7 @@
     }
 
     // ============================================================================
-    // STARTSEITE (ÜBERSICHTLICH & KLAR)
+    // STARTSEITE
     // ============================================================================
     function showHome() {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -657,16 +631,14 @@
       main.innerHTML = `
         <div class="space-y-5 animate-step">
 
-          <!-- Klare Anleitung in 2 Schritten -->
           <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-2xl p-5 shadow-xs space-y-4">
             <h1 class="text-xl sm:text-2xl font-extrabold">
               👋 Willkommen beim Web-Führerschein!
             </h1>
             <p class="text-base text-[var(--muted-foreground)] leading-relaxed">
-              So einfach geht's: Trage unten deinen Namen ein und arbeite die <b>4 kurzen Levels</b> der Reihe nach durch.
+              So einfach geht's: Trage unten deinen Namen ein und arbeite die <b>4 kurzen Levels</b> durch. Dich erwarten abwechslungsreiche Mini-Aufgaben (Paare verbinden, Lückentexte, Richtig/Falsch & Quiz)!
             </p>
 
-            <!-- Schritt 1: Name -->
             <div class="p-3.5 rounded-xl bg-[var(--secondary)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <label for="nameInput" class="font-bold text-sm">
                 1️⃣ Dein Vorname & Nachname:
@@ -681,10 +653,9 @@
               />
             </div>
 
-            <!-- Fortschrittsbalken -->
             <div class="pt-1">
               <div class="flex justify-between text-sm font-bold mb-1.5">
-                <span>Gesamt-Fortschritt (${prog.done} von ${prog.total} Begriffen geschafft)</span>
+                <span>Gesamt-Fortschritt (${prog.done} von ${prog.total} Aufgaben geschafft)</span>
                 <span>${prog.pct}%</span>
               </div>
               <div class="w-full h-3.5 bg-[var(--secondary)] rounded-full overflow-hidden">
@@ -693,7 +664,6 @@
             </div>
           </div>
 
-          <!-- Schritt 2: Die 4 Levels (Nur je 1 klarer Start-Knopf!) -->
           <div class="space-y-3">
             <div class="font-bold text-sm uppercase tracking-wider text-[var(--muted-foreground)] px-1">
               2️⃣ Wähle dein Level:
@@ -733,14 +703,13 @@
     }
 
     // ============================================================================
-    // LEVEL-ANSICHT: IMMER NUR 1 BEGRIFF + 1 FRAGE GLEICHZEITIG
+    // LEVEL-ANSICHT MIT 4 VERSCHIEDENEN AUFGABEN-ARTEN
     // ============================================================================
     function startLevel(levelId) {
       activeLevelId = levelId;
       const lvl = LEVELS.find(l => l.id === levelId);
       const solved = state.solvedSteps[levelId] || [];
 
-      // Springe zum ersten noch nicht gelösten Schritt (oder zu Schritt 0, wenn alle fertig)
       let firstUnsolved = 0;
       for (let i = 0; i < lvl.steps.length; i++) {
         if (!solved.includes(i)) {
@@ -763,24 +732,176 @@
 
       activeStepIndex = stepIdx;
       stepAnsweredCorrectly = false;
-
       const step = lvl.steps[stepIdx];
-      // Antwortmöglichkeiten mischen (die richtige Antwort ist immer step.options[0])
-      const tagged = step.options.map((text, idx) => ({ text, isCorrect: idx === 0 }));
-      for (let i = tagged.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [tagged[i], tagged[j]] = [tagged[j], tagged[i]];
+
+      if (step.taskType === "mc") {
+        const tagged = step.options.map((text, idx) => ({ text, isCorrect: idx === 0 }));
+        currentShuffledOptions = shuffle(tagged);
+      } else if (step.taskType === "fill") {
+        currentShuffledOptions = shuffle(step.words);
+      } else if (step.taskType === "pairs") {
+        pairsState = {
+          leftItems: step.pairs.map((p, idx) => ({ text: p.left, pairId: idx })),
+          rightItems: shuffle(step.pairs.map((p, idx) => ({ text: p.right, pairId: idx }))),
+          selectedLeftIdx: 0, // Auto-select first left item so student immediately sees what to match!
+          matchedLeftIndices: []
+        };
       }
-      currentShuffledOptions = tagged;
 
       renderActiveStep();
+    }
+
+    function getTaskBadgeLabel(type) {
+      if (type === "fill") return "🧩 Lückentext – tippe auf das passende Wort";
+      if (type === "truefalse") return "⚖️ Stimmt das oder Quatsch?";
+      if (type === "pairs") return "🔗 Verbinde die 3 passenden Paare";
+      return "🎯 Auswahl-Frage – tippe auf die richtige Antwort";
+    }
+
+    function renderTaskArea(step) {
+      if (step.taskType === "mc") {
+        return `
+          <p class="text-base sm:text-lg font-extrabold leading-snug">
+            ${step.question}
+          </p>
+          <div class="space-y-2.5">
+            ${currentShuffledOptions.map((opt, idx) => `
+              <button
+                id="optBtn_${idx}"
+                onclick="checkMCAnswer(${idx})"
+                class="touch-btn w-full text-left p-4 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)] font-bold text-sm sm:text-base flex items-center gap-3"
+              >
+                <span class="w-8 h-8 rounded-lg bg-[var(--secondary)] flex items-center justify-center text-sm font-extrabold shrink-0">
+                  ${idx + 1}
+                </span>
+                <span>${opt.text}</span>
+              </button>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (step.taskType === "fill") {
+        return `
+          <div class="p-4 rounded-xl bg-[var(--background)] border-2 border-[var(--border)] text-base sm:text-lg font-bold leading-relaxed">
+            ${step.sentenceBefore}
+            <span id="fillBlankBox" class="inline-block px-3.5 py-1 mx-1 rounded-lg bg-[var(--secondary)] border-2 border-dashed border-[var(--primary)] text-[var(--primary)] font-extrabold">
+              ? ? ?
+            </span>
+            ${step.sentenceAfter}
+          </div>
+          <div class="grid grid-cols-2 gap-2.5 pt-1">
+            ${currentShuffledOptions.map((word, idx) => `
+              <button
+                id="fillBtn_${idx}"
+                onclick="checkFillAnswer(${idx})"
+                class="touch-btn p-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)] font-extrabold text-sm sm:text-base text-center"
+              >
+                ${word}
+              </button>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (step.taskType === "truefalse") {
+        return `
+          <div class="p-4 rounded-xl bg-[var(--background)] border-2 border-[var(--border)] text-base sm:text-lg font-extrabold leading-snug">
+            ${step.statement}
+          </div>
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <button
+              id="tfBtn_true"
+              onclick="checkTrueFalse(true)"
+              class="touch-btn p-4 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)] font-extrabold text-base flex items-center justify-center gap-2"
+            >
+              <span>👍</span>
+              <span>Ja / Stimmt</span>
+            </button>
+            <button
+              id="tfBtn_false"
+              onclick="checkTrueFalse(false)"
+              class="touch-btn p-4 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)] font-extrabold text-base flex items-center justify-center gap-2"
+            >
+              <span>👎</span>
+              <span>Nein / Falsch</span>
+            </button>
+          </div>
+        `;
+      }
+
+      if (step.taskType === "pairs") {
+        return `
+          <p class="text-sm sm:text-base font-extrabold">
+            ${step.question} <span class="font-normal text-[var(--muted-foreground)]">(Links Begriff wählen → rechts passende Erklärung antippen)</span>
+          </p>
+          <div id="pairsBoard" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            ${renderPairsColumns()}
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderPairsColumns() {
+      const leftHtml = pairsState.leftItems.map((item, idx) => {
+        const isMatched = pairsState.matchedLeftIndices.includes(idx);
+        const isSelected = pairsState.selectedLeftIdx === idx && !isMatched;
+        return `
+          <button
+            onclick="selectLeftPair(${idx})"
+            ${isMatched ? "disabled" : ""}
+            class="touch-btn w-full text-left p-3.5 rounded-xl border-2 font-extrabold text-sm flex items-center justify-between gap-2 ${
+              isMatched
+                ? "border-emerald-500 bg-emerald-500/15 text-emerald-500 opacity-80"
+                : isSelected
+                ? "border-[var(--primary)] bg-[var(--secondary)]"
+                : "border-[var(--border)] bg-[var(--background)]"
+            }"
+          >
+            <span>${item.text}</span>
+            <span>${isMatched ? "✅" : isSelected ? "👉" : ""}</span>
+          </button>
+        `;
+      }).join("");
+
+      const rightHtml = pairsState.rightItems.map((item, rIdx) => {
+        const isMatched = pairsState.matchedLeftIndices.includes(item.pairId);
+        return `
+          <button
+            id="rightPair_${rIdx}"
+            onclick="selectRightPair(${rIdx})"
+            ${isMatched ? "disabled" : ""}
+            class="touch-btn w-full text-left p-3.5 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-between gap-2 ${
+              isMatched
+                ? "border-emerald-500 bg-emerald-500/15 text-emerald-500 opacity-80"
+                : "border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)]"
+            }"
+          >
+            <span>${item.text}</span>
+            <span>${isMatched ? "✅" : ""}</span>
+          </button>
+        `;
+      }).join("");
+
+      return `
+        <div class="space-y-2">
+          <div class="text-xs font-extrabold uppercase text-[var(--muted-foreground)]">1. Begriff:</div>
+          ${leftHtml}
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs font-extrabold uppercase text-[var(--muted-foreground)]">2. Passende Bedeutung:</div>
+          ${rightHtml}
+        </div>
+      `;
     }
 
     function renderActiveStep() {
       const lvl = LEVELS.find(l => l.id === activeLevelId);
       const step = lvl.steps[activeStepIndex];
       const totalSteps = lvl.steps.length;
-      const pct = Math.round(((activeStepIndex) / totalSteps) * 100);
+      const pct = Math.round((activeStepIndex / totalSteps) * 100);
 
       const main = document.getElementById("mainView");
       main.innerHTML = `
@@ -815,47 +936,28 @@
               </button>
             </div>
 
-            <!-- Der einfache Erklärtext in grosser Schrift -->
             <div class="text-base sm:text-lg leading-relaxed p-4 rounded-xl bg-[var(--background)] border border-[var(--border)]">
               ${step.simpleText}
             </div>
 
-            <!-- Kurzer Alltags-Merksatz -->
             <div class="text-sm font-semibold px-4 py-3 rounded-xl bg-[var(--secondary)]">
               💡 ${step.tip}
             </div>
           </div>
 
-          <!-- TEIL 2: DIREKTE FRAGE ZUM ANTIPPEN -->
+          <!-- TEIL 2: ABWECHSLUNGSREICHE AUFGABE -->
           <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted-foreground)]">
-              👇 Deine Aufgabe – tippe auf die richtige Antwort:
+            <div class="inline-block text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+              ${getTaskBadgeLabel(step.taskType)}
             </div>
 
-            <p class="text-base sm:text-lg font-extrabold leading-snug">
-              ${step.question}
-            </p>
-
-            <div class="space-y-2.5">
-              ${currentShuffledOptions.map((opt, idx) => `
-                <button
-                  id="optBtn_${idx}"
-                  onclick="checkAnswer(${idx})"
-                  class="touch-btn w-full text-left p-4 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] hover:bg-[var(--secondary)] font-bold text-sm sm:text-base flex items-center gap-3"
-                >
-                  <span class="w-8 h-8 rounded-lg bg-[var(--secondary)] flex items-center justify-center text-sm font-extrabold shrink-0">
-                    ${idx + 1}
-                  </span>
-                  <span>${opt.text}</span>
-                </button>
-              `).join("")}
-            </div>
+            ${renderTaskArea(step)}
 
             <!-- Rückmeldung + Weiter-Knopf -->
             <div id="answerFeedback" class="hidden p-4 rounded-xl space-y-3"></div>
           </div>
 
-          <!-- Zurück / Vorwärts Navigation unten -->
+          <!-- Zurück Navigation unten -->
           <div class="flex justify-between items-center pt-1">
             <button
               onclick="${activeStepIndex > 0 ? `openStep(${activeStepIndex - 1})` : `showHome()`}"
@@ -872,59 +974,167 @@
     function speakStep() {
       const lvl = LEVELS.find(l => l.id === activeLevelId);
       const step = lvl.steps[activeStepIndex];
-      speak(`${step.title}. ${step.simpleText}. ${step.tip}. Frage: ${step.question}`);
+      const extra = step.question || step.statement || (step.sentenceBefore + " Lücke " + step.sentenceAfter);
+      speak(`${step.title}. ${step.simpleText}. ${step.tip}. ${extra}`);
     }
 
-    function checkAnswer(chosenIdx) {
-      if (stepAnsweredCorrectly) return;
-
+    // ============================================================================
+    // AUSWERTUNGS-FUNKTIONEN FÜR ALLE 4 AUFGABEN-ARTEN
+    // ============================================================================
+    function markStepSolved() {
+      stepAnsweredCorrectly = true;
       const lvl = LEVELS.find(l => l.id === activeLevelId);
       const step = lvl.steps[activeStepIndex];
-      const chosen = currentShuffledOptions[chosenIdx];
-      const btn = document.getElementById(`optBtn_${chosenIdx}`);
+
+      if (!state.solvedSteps[lvl.id]) state.solvedSteps[lvl.id] = [];
+      if (!state.solvedSteps[lvl.id].includes(activeStepIndex)) {
+        state.solvedSteps[lvl.id].push(activeStepIndex);
+        saveState();
+      }
+
       const fb = document.getElementById("answerFeedback");
       if (!fb) return;
-
       fb.classList.remove("hidden");
+      fb.className = "p-4 rounded-xl space-y-3 bg-emerald-500/15 border-2 border-emerald-500/50 animate-step";
+      fb.innerHTML = `
+        <div class="font-extrabold text-base text-emerald-500">
+          ✅ Super, das ist richtig!
+        </div>
+        <p class="text-sm font-medium">${step.feedback}</p>
+        <button
+          onclick="openStep(${activeStepIndex + 1})"
+          class="touch-btn w-full py-3.5 px-6 rounded-xl bg-emerald-600 text-white font-extrabold text-base shadow-sm"
+        >
+          Weiter zum nächsten Schritt →
+        </button>
+      `;
+    }
+
+    function showWrongFeedback(customHint) {
+      const fb = document.getElementById("answerFeedback");
+      if (!fb) return;
+      fb.classList.remove("hidden");
+      fb.className = "p-4 rounded-xl space-y-2 bg-rose-500/15 border-2 border-rose-500/40 animate-step";
+      fb.innerHTML = `
+        <div class="font-extrabold text-base text-rose-500">
+          ❌ ${customHint || "Nicht ganz! Schau oben nochmal kurz auf die fettgedruckten Wörter und probier es nochmal."}
+        </div>
+      `;
+    }
+
+    // 1. Multiple Choice
+    function checkMCAnswer(chosenIdx) {
+      if (stepAnsweredCorrectly) return;
+      const chosen = currentShuffledOptions[chosenIdx];
+      const btn = document.getElementById(`optBtn_${chosenIdx}`);
 
       if (chosen.isCorrect) {
-        stepAnsweredCorrectly = true;
-
-        // Als gelöst speichern
-        if (!state.solvedSteps[lvl.id]) state.solvedSteps[lvl.id] = [];
-        if (!state.solvedSteps[lvl.id].includes(activeStepIndex)) {
-          state.solvedSteps[lvl.id].push(activeStepIndex);
-          saveState();
-        }
-
         if (btn) {
           btn.className = "touch-btn w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 font-extrabold text-sm sm:text-base flex items-center gap-3";
         }
-
-        fb.className = "p-4 rounded-xl space-y-3 bg-emerald-500/15 border-2 border-emerald-500/50 animate-step";
-        fb.innerHTML = `
-          <div class="font-extrabold text-base text-emerald-500">
-            ✅ Super, das ist richtig!
-          </div>
-          <p class="text-sm font-medium">${step.feedback}</p>
-          <button
-            onclick="openStep(${activeStepIndex + 1})"
-            class="touch-btn w-full py-3.5 px-6 rounded-xl bg-emerald-600 text-white font-extrabold text-base shadow-sm"
-          >
-            Weiter zum nächsten Schritt →
-          </button>
-        `;
+        markStepSolved();
       } else {
         if (btn) {
           btn.className = "touch-btn w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-500/15 font-bold text-sm sm:text-base flex items-center gap-3 opacity-75";
         }
+        showWrongFeedback();
+      }
+    }
 
-        fb.className = "p-4 rounded-xl space-y-2 bg-rose-500/15 border-2 border-rose-500/40 animate-step";
-        fb.innerHTML = `
-          <div class="font-extrabold text-base text-rose-500">
-            ❌ Nicht ganz! Lies oben nochmal kurz den fettgedruckten Begriff und probier eine andere Antwort.
-          </div>
-        `;
+    // 2. Fill in the blank
+    function checkFillAnswer(idx) {
+      if (stepAnsweredCorrectly) return;
+      const lvl = LEVELS.find(l => l.id === activeLevelId);
+      const step = lvl.steps[activeStepIndex];
+      const word = currentShuffledOptions[idx];
+      const btn = document.getElementById(`fillBtn_${idx}`);
+      const blankBox = document.getElementById("fillBlankBox");
+
+      if (word === step.correctWord) {
+        if (blankBox) {
+          blankBox.textContent = word;
+          blankBox.className = "inline-block px-3.5 py-1 mx-1 rounded-lg bg-emerald-500 text-white font-extrabold";
+        }
+        if (btn) {
+          btn.className = "touch-btn p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 font-extrabold text-sm sm:text-base text-center";
+        }
+        markStepSolved();
+      } else {
+        if (btn) {
+          btn.className = "touch-btn p-3.5 rounded-xl border-2 border-rose-500 bg-rose-500/15 font-bold text-sm sm:text-base text-center opacity-70";
+        }
+        showWrongFeedback("Dieses Wort passt nicht in die Lücke. Probier ein anderes!");
+      }
+    }
+
+    // 3. True / False
+    function checkTrueFalse(userSaidTrue) {
+      if (stepAnsweredCorrectly) return;
+      const lvl = LEVELS.find(l => l.id === activeLevelId);
+      const step = lvl.steps[activeStepIndex];
+      const btn = document.getElementById(userSaidTrue ? "tfBtn_true" : "tfBtn_false");
+
+      if (userSaidTrue === step.isTrue) {
+        if (btn) {
+          btn.className = "touch-btn p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 font-extrabold text-base flex items-center justify-center gap-2";
+        }
+        markStepSolved();
+      } else {
+        if (btn) {
+          btn.className = "touch-btn p-4 rounded-xl border-2 border-rose-500 bg-rose-500/15 font-bold text-base flex items-center justify-center gap-2 opacity-75";
+        }
+        showWrongFeedback("Umgekehrt! Lies die Behauptung und den Text oben noch einmal genau.");
+      }
+    }
+
+    // 4. Pairs Matching
+    function selectLeftPair(leftIdx) {
+      if (stepAnsweredCorrectly) return;
+      if (pairsState.matchedLeftIndices.includes(leftIdx)) return;
+      pairsState.selectedLeftIdx = leftIdx;
+      const board = document.getElementById("pairsBoard");
+      if (board) board.innerHTML = renderPairsColumns();
+    }
+
+    function selectRightPair(rightIdx) {
+      if (stepAnsweredCorrectly) return;
+      if (pairsState.selectedLeftIdx === null) {
+        showWrongFeedback("Tippe zuerst links auf einen Begriff!");
+        return;
+      }
+
+      const rightItem = pairsState.rightItems[rightIdx];
+      if (rightItem.pairId === pairsState.selectedLeftIdx) {
+        // Match!
+        pairsState.matchedLeftIndices.push(pairsState.selectedLeftIdx);
+
+        // Select next unmatched left item automatically
+        let nextUnmatched = null;
+        for (let i = 0; i < pairsState.leftItems.length; i++) {
+          if (!pairsState.matchedLeftIndices.includes(i)) {
+            nextUnmatched = i;
+            break;
+          }
+        }
+        pairsState.selectedLeftIdx = nextUnmatched;
+
+        const board = document.getElementById("pairsBoard");
+        if (board) board.innerHTML = renderPairsColumns();
+
+        // Hide any previous wrong feedback
+        const fb = document.getElementById("answerFeedback");
+        if (fb) fb.classList.add("hidden");
+
+        // All pairs matched?
+        if (pairsState.matchedLeftIndices.length >= pairsState.leftItems.length) {
+          markStepSolved();
+        }
+      } else {
+        const rightBtn = document.getElementById(`rightPair_${rightIdx}`);
+        if (rightBtn) {
+          rightBtn.classList.add("border-rose-500", "bg-rose-500/15");
+        }
+        showWrongFeedback("Das gehört noch nicht zusammen – probier eine andere Erklärung rechts!");
       }
     }
 
@@ -935,7 +1145,7 @@
           <div class="text-6xl">🎉</div>
           <h2 class="text-2xl font-extrabold">${lvl.title} geschafft!</h2>
           <p class="text-base text-[var(--muted-foreground)]">
-            Stark! Du hast alle ${lvl.steps.length} Begriffe und Fragen in diesem Level richtig gelöst.
+            Stark! Du hast alle ${lvl.steps.length} Begriffe und Aufgaben in diesem Level gelöst.
           </p>
           <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
             <button
@@ -956,7 +1166,7 @@
     }
 
     // ============================================================================
-    // BEGRIFFE A-Z (EINFACHES NACHSCHLAGEWERK)
+    // BEGRIFFE A-Z & ABGABE-PASS
     // ============================================================================
     function openLexikon() {
       const backdrop = document.getElementById("modalBackdrop");
@@ -1012,9 +1222,6 @@
       if (el) el.innerHTML = renderLexikonList(filtered);
     }
 
-    // ============================================================================
-    // ABGABE-PASS FÜR DIE LEHRPERSON
-    // ============================================================================
     function openPass() {
       const backdrop = document.getElementById("modalBackdrop");
       const box = document.getElementById("modalBox");
